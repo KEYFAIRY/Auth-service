@@ -14,9 +14,8 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar la app
-COPY Service ./Service
-COPY credentials/firebase_account.json ./credentials/firebase_account.json
+COPY app ./app
+COPY firebase_account.json ./credentials/firebase_account.json
 
 # Variables de entorno para FastAPI
 ENV PYTHONUNBUFFERED=1
@@ -25,4 +24,4 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
 # Comando para ejecutar la app
-CMD ["uvicorn", "Service.presentation.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

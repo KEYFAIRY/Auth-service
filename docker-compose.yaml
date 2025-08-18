@@ -1,26 +1,27 @@
+version: "3.9"
+
 services:
   auth-service:
     build:
-      context: .   # ahora es la raíz de Auth-service
+      context: .
       dockerfile: Dockerfile
     container_name: auth-service
     ports:
       - "${AUTH_SERVICE_PORT}:8000"
     environment:
-      - ENVIRONMENT=${ENVIRONMENT:-qa}
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_PORT=${MYSQL_PORT}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DB=${MYSQL_DB}
-      - FIREBASE_API_KEY=${FIREBASE_API_KEY}
-      - FIREBASE_CREDENTIALS_PATH=/app/credentials/firebase_account.json
+      ENVIRONMENT: ${ENVIRONMENT:-qa}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DB: ${MYSQL_DB}
+      FIREBASE_CREDENTIALS_PATH: /app/credentials/firebase_account.json
     volumes:
-      - ./credentials/firebase_account.json:/app/credentials/firebase_account.json:ro
+      - ./firebase_account.json:/app/credentials/firebase_account.json:ro
     restart: unless-stopped
     networks:
-      - kong-net
+      - app-network
 
 networks:
-  kong-net:
-    external: false
+  app-network:
+    external: true
