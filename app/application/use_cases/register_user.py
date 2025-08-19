@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from app.application.interfaces.auth_service_interface import AuthServiceInterface
+from app.application.interfaces.user_service_interface import AuthServiceInterface
 from app.domain.services.auth_service import AuthDomainService
 from app.application.dto.user_dto import CreateUserDTO, UserResponseDTO
 from app.core.exceptions import (
