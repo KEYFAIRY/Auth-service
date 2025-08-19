@@ -5,3 +5,5 @@ firebase-admin
 PyMySQL
 SQLAlchemy
 mysqlclient
+aiomysql
+pydantic-settings
