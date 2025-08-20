@@ -8,7 +8,7 @@ import sys
 # Imports locales
 from app.core.config import settings
 from app.core.exceptions import (
-    AuthServiceException,
+    UserServiceException,
     UserAlreadyExistsException,
     InvalidUserDataException,
     UserNotFoundException,
@@ -18,7 +18,7 @@ from app.core.exceptions import (
 )
 from app.presentation.api.v1.users import router as users_router
 from app.presentation.middleware.exception_handler import (
-    auth_service_exception_handler,
+    user_service_exception_handler,
     user_already_exists_exception_handler,
     invalid_user_data_exception_handler,
     user_not_found_exception_handler,
@@ -30,7 +30,8 @@ from app.presentation.middleware.exception_handler import (
 )
 from app.infrastructure.database.mysql_connection import db_connection
 
-# Configurar logging
+
+# Configure application logging
 logging.basicConfig(
     level=getattr(logging, settings.LOG_LEVEL),
     format=settings.LOG_FORMAT,
@@ -39,6 +40,12 @@ logging.basicConfig(
         logging.FileHandler("app.log") if settings.ENVIRONMENT != "development" else logging.NullHandler()
     ]
 )
+
+# Reduce FastAPI/Uvicorn log verbosity
+logging.getLogger("uvicorn").setLevel(logging.WARNING)
+logging.getLogger("uvicorn.error").setLevel(logging.WARNING)
+logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+logging.getLogger("fastapi").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
@@ -92,7 +99,7 @@ def create_application() -> FastAPI:
     )
     
     # Registrar manejadores de excepciones
-    app.add_exception_handler(AuthServiceException, auth_service_exception_handler)
+    app.add_exception_handler(UserServiceException, user_service_exception_handler)
     app.add_exception_handler(UserAlreadyExistsException, user_already_exists_exception_handler)
     app.add_exception_handler(InvalidUserDataException, invalid_user_data_exception_handler)
     app.add_exception_handler(UserNotFoundException, user_not_found_exception_handler)
