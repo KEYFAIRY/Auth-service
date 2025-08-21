@@ -10,7 +10,6 @@ from app.core.exceptions import (
     UserServiceException
 )
 from app.domain.entities.user import User
-from app.shared.utils import parse_piano_level
 
 logger = logging.getLogger(__name__)
 

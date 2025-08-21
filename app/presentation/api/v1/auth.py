@@ -25,7 +25,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post(
     "/register",
-    response_model=StandardResponse,
+    response_model=StandardResponse[AuthResponse],
     status_code=status.HTTP_201_CREATED,
     summary="Register new user credentials",
     description="Register a new user in Firebase Authentication"
@@ -42,25 +42,22 @@ async def register_auth_user(
         password=auth_request.password
     )
     
-    # Create response data
+    # Map DTO -> Response Schema
     auth_response = AuthResponse(
         uid=auth_dto.uid,
         email=auth_dto.email
     )
     
-    # Return standardized response
-    response = StandardResponse.created(
+    logger.info(f"User credentials registered successfully: {auth_response.uid}")
+    return StandardResponse.created(
         data=auth_response.dict(),
         message="User credentials registered successfully"
     )
-    
-    logger.info(f"User credentials registered successfully: {auth_dto.uid}")
-    return response
 
 
 @router.post(
     "/login",
-    response_model=StandardResponse,
+    response_model=StandardResponse[LoginResponse],
     status_code=status.HTTP_200_OK,
     summary="Login user",
     description="Authenticate user and return access tokens"
@@ -77,7 +74,7 @@ async def login_user(
         password=login_request.password
     )
     
-    # Create response data
+    # Map DTO -> Response Schema
     login_response = LoginResponse(
         uid=login_dto.uid,
         email=login_dto.email,
@@ -85,19 +82,16 @@ async def login_user(
         refresh_token=login_dto.refresh_token
     )
     
-    # Return standardized response
-    response = StandardResponse.success(
+    logger.info(f"User logged in successfully: {login_response.uid}")
+    return StandardResponse.success(
         data=login_response.dict(),
         message="User logged in successfully"
     )
-    
-    logger.info(f"User logged in successfully: {login_dto.uid}")
-    return response
 
 
 @router.post(
     "/refresh-token",
-    response_model=StandardResponse,
+    response_model=StandardResponse[TokenResponse],
     status_code=status.HTTP_200_OK,
     summary="Refresh access token",
     description="Refresh the user's access token using refresh token"
@@ -113,17 +107,14 @@ async def refresh_token(
         refresh_token=token_request.refresh_token
     )
     
-    # Create response data
+    # Map DTO -> Response Schema
     token_response = TokenResponse(
         id_token=token_dto.id_token,
         refresh_token=token_dto.refresh_token
     )
     
-    # Return standardized response
-    response = StandardResponse.success(
-        data=token_response.dict(),
+    logger.info("Token refreshed successfully")
+    return StandardResponse.success(
+        data=token_response,
         message="Token refreshed successfully"
     )
-    
-    logger.info("Token refreshed successfully")
-    return response
