@@ -11,33 +11,33 @@ class UserService:
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
 
-    async def create_user(self, dto: CreateUserDTO) -> User:
+    async def create_user(self, user: User) -> User:
         # Check existence
-        if await self.user_repository.user_exists_by_uid(dto.uid):
-            raise UserAlreadyExistsException(f"User with UID {dto.uid} already exists")
-        if await self.user_repository.user_exists_by_email(dto.email):
-            raise UserAlreadyExistsException(f"User with email {dto.email} already exists")
+        if await self.user_repository.user_exists_by_uid(user.uid):
+            raise UserAlreadyExistsException(f"User with UID {user.uid} already exists")
+        if await self.user_repository.user_exists_by_email(user.email):
+            raise UserAlreadyExistsException(f"User with email {user.email} already exists")
 
-        self._validate_user_data(dto.email, dto.name, dto.piano_level)
+        self._validate_user_data(user.email, user.name, user.piano_level)
 
         user = User(
-            uid=dto.uid,
-            email=dto.email.lower().strip(),
-            name=dto.name.strip(),
-            piano_level=dto.piano_level
+            uid=user.uid,
+            email=user.email.lower().strip(),
+            name=user.name.strip(),
+            piano_level=user.piano_level
         )
 
         return await self.user_repository.create_user(user)
 
-    async def update_user(self, uid: str, dto: UpdateUserDTO) -> User:
+    async def update_user(self, uid: str, name: str, email: str, piano_level: PianoLevel) -> User:
         user = await self.user_repository.get_user_by_uid(uid)
         if not user:
             raise InvalidUserDataException(f"User with UID {uid} not found")
 
         # Update fields
-        user.name = dto.name or user.name
-        user.email = dto.email or user.email
-        user.piano_level = dto.piano_level or user.piano_level
+        user.name = name or user.name
+        user.email = email or user.email
+        user.piano_level = piano_level or user.piano_level
 
         self._validate_user_data(user.email, user.name, user.piano_level)
 

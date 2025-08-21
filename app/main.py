@@ -17,6 +17,7 @@ from app.core.exceptions import (
     ValidationException
 )
 from app.presentation.api.v1.users import router as users_router
+from app.presentation.api.v1.auth import router as auth_router
 from app.presentation.middleware.exception_handler import (
     user_service_exception_handler,
     user_already_exists_exception_handler,
@@ -111,7 +112,8 @@ def create_application() -> FastAPI:
     
     # Registrar rutas
     app.include_router(users_router, prefix="/api/v1")
-    
+    app.include_router(auth_router, prefix="/api/v1")
+
     # Endpoint de health check
     @app.get("/health")
     async def health_check():

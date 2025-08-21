@@ -1,4 +1,4 @@
-# app/application/use_cases/register_user.py
+import logging
 from app.application.interfaces.user_service_interface import UserServiceInterface
 from app.application.dto.user_dto import CreateUserDTO, UserResponseDTO
 from app.core.exceptions import (
@@ -9,8 +9,7 @@ from app.core.exceptions import (
     ValidationException,
     UserServiceException
 )
-import logging
-
+from app.domain.entities.user import User
 from app.shared.utils import parse_piano_level
 
 logger = logging.getLogger(__name__)
@@ -26,27 +25,31 @@ class RegisterUserUseCase:
         try:
             logger.info(f"Initiating user registration for UID: {create_user_dto.uid}")
 
-            # Create user using the application service
-            created_user = await self.user_service.create_user(create_user_dto)
+            # Convert DTO -> Domain Entity
+            user_entity = User(
+                uid=create_user_dto.uid,
+                email=create_user_dto.email,
+                name=create_user_dto.name,
+                piano_level=create_user_dto.piano_level
+            ) 
 
-            # Convert piano level safely
-            piano_level_value = parse_piano_level(created_user.piano_level)
+            # Call domain service to persist user
+            created_user = await self.user_service.create_user(user_entity)
 
-            # Convert to response DTO
+            # Build response DTO (Entity -> DTO)
             user_response = UserResponseDTO(
                 uid=created_user.uid,
                 email=created_user.email,
                 name=created_user.name,
-                piano_level=piano_level_value,
+                piano_level=created_user.piano_level.value
             )
 
-            logger.info(f"User registered successfully: {create_user_dto.uid}")
+            logger.info(f"User registered successfully: {created_user.uid}")
             return user_response
 
         except (UserAlreadyExistsException, InvalidUserDataException,
                 DatabaseConnectionException, FirebaseAuthException,
                 ValidationException) as e:
-            # Already a UserServiceException subclass
             logger.warning(f"Error registering user {create_user_dto.uid}: {e.message}")
             raise
         except Exception as e:

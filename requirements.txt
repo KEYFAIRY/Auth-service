@@ -6,4 +6,6 @@ PyMySQL
 SQLAlchemy
 mysqlclient
 aiomysql
+aiohttp
 pydantic-settings
+pydantic[email]

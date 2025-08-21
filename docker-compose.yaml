@@ -16,6 +16,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DB: ${MYSQL_DB}
       FIREBASE_CREDENTIALS_PATH: /app/credentials/firebase_account.json
+      FIREBASE_WEB_API_KEY: ${FIREBASE_WEB_API_KEY}
     volumes:
       - ./firebase_account.json:/app/credentials/firebase_account.json:ro
     restart: unless-stopped

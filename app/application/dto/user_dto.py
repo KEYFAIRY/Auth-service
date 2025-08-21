@@ -4,7 +4,7 @@ from app.shared.enums import PianoLevel
 
 
 class CreateUserDTO(BaseModel):
-    """DTO para crear usuario"""
+    """DTO for creating user"""
     uid: str = Field(..., min_length=1, description="Firebase UID")
     email: str = Field(..., min_length=5, description="Email del usuario")
     name: str = Field(..., min_length=2, max_length=100, description="Nombre del usuario")
@@ -22,7 +22,7 @@ class CreateUserDTO(BaseModel):
 
 
 class UserResponseDTO(BaseModel):
-    """DTO para respuesta de usuario"""
+    """DTO for user response"""
     uid: str
     email: str
     name: str
@@ -33,7 +33,7 @@ class UserResponseDTO(BaseModel):
 
 
 class UpdateUserDTO(BaseModel):
-    """DTO para actualizar usuario"""
+    """DTO for updating user"""
     email: Optional[str] = Field(None, min_length=5, description="Email del usuario")
     name: Optional[str] = Field(None, min_length=2, max_length=100, description="Nombre del usuario")
     piano_level: Optional[PianoLevel] = Field(None, description="Nivel de piano")
