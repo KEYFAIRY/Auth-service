@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field, validator
 from app.shared.enums import PianoLevel
 
@@ -59,3 +60,22 @@ class UserResponse(BaseModel):
         
 class UpdateUserRequest(BaseModel):
     """Esquema para actualizar usuario"""
+    email: Optional[str] = Field(None, min_length=5, max_length=255, description="Nuevo email del usuario")
+    name: Optional[str] = Field(None, min_length=2, max_length=100, description="Nuevo nombre del usuario")
+    piano_level: Optional[PianoLevel] = Field(None, description="Nuevo nivel de piano del usuario")
+    
+    @validator('email')
+    def validate_email(cls, v):
+        if v:
+            v = v.strip().lower()
+            if '@' not in v or '.' not in v.split('@')[1]:
+                raise ValueError('Invalid email format')
+        return v
+    
+    @validator('name')
+    def validate_name(cls, v):
+        if v:
+            v = v.strip()
+            if not v:
+                raise ValueError('Name cannot be empty')
+        return v

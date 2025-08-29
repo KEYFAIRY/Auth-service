@@ -1,13 +1,15 @@
 from fastapi import APIRouter, Depends, status
-from app.presentation.schemas.user_schema import CreateUserRequest, UserResponse
+from app.application.use_cases.update_user_use_case import UpdateUserUseCase
+from app.presentation.schemas.user_schema import CreateUserRequest, UpdateUserRequest, UserResponse
 from app.presentation.schemas.common_schema import StandardResponse
 from app.application.use_cases.register_user import RegisterUserUseCase
 from app.application.use_cases.get_user import GetUserUseCase
 from app.presentation.api.dependencies import (
     register_user_use_case_dependency,
-    get_user_use_case_dependency
+    get_user_use_case_dependency,
+    update_user_use_case_dependency
 )
-from app.application.dto.user_dto import CreateUserDTO
+from app.application.dto.user_dto import CreateUserDTO, UpdateUserDTO
 import logging
 
 logger = logging.getLogger(__name__)
@@ -55,6 +57,46 @@ async def create_user(
 
     logger.info(f"User created successfully: {user_request.uid}")
     return response
+
+
+@router.put(
+    "/{uid}",
+    response_model=StandardResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Update a user",
+    description="Update an existing user by UID"
+)
+async def update_user(
+    uid: str,
+    update_request: UpdateUserRequest,
+    update_use_case: UpdateUserUseCase = Depends(update_user_use_case_dependency)
+):
+    logger.info(f"Request to update user with UID: {uid}")
+
+    # Request → DTO
+    update_dto = UpdateUserDTO(
+        email=update_request.email,
+        name=update_request.name,
+        piano_level=update_request.piano_level
+    )
+
+    # Ejecutamos el caso de uso
+    updated_user_dto = await update_use_case.execute(uid, update_dto)
+
+    # DTO → Schema
+    user_response = UserResponse(
+        uid=updated_user_dto.uid,
+        email=updated_user_dto.email,
+        name=updated_user_dto.name,
+        piano_level=updated_user_dto.piano_level
+    )
+
+    logger.info(f"User updated successfully: {uid}")
+
+    return StandardResponse.success(
+        data=user_response.dict(),
+        message="User updated successfully"
+    )
 
 
 @router.get(

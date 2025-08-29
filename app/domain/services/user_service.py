@@ -1,3 +1,4 @@
+from app.application.dto.user_dto import UpdateUserDTO
 from app.domain.entities.user import User
 from app.domain.repositories.user_repository import UserRepository
 from app.core.exceptions import UserAlreadyExistsException, InvalidUserDataException
@@ -27,15 +28,15 @@ class UserService:
 
         return await self.user_repository.create_user(user)
 
-    async def update_user(self, uid: str, name: str, email: str, piano_level: PianoLevel) -> User:
+    async def update_user(self, uid: str, updated_user: UpdateUserDTO) -> User:
         user = await self.user_repository.get_user_by_uid(uid)
         if not user:
             raise InvalidUserDataException(f"User with UID {uid} not found")
 
         # Update fields
-        user.name = name or user.name
-        user.email = email or user.email
-        user.piano_level = piano_level or user.piano_level
+        user.name = updated_user.name or user.name
+        user.email = updated_user.email or user.email
+        user.piano_level = updated_user.piano_level or user.piano_level
 
         self._validate_user_data(user.email, user.name, user.piano_level)
 
