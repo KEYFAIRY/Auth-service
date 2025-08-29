@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
-    # Configuración de CORS
+    # Configuración de CORS (luego)
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
         "http://localhost:3001",
@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     ]
 
 
-    # Configuración de Rate Limiting
+    # Configuración de Rate Limiting (luego)
     RATE_LIMIT_CALLS: int = 100
     RATE_LIMIT_PERIOD: int = 60  # seconds
 

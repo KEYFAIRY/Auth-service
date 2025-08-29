@@ -42,11 +42,12 @@ logging.basicConfig(
     ]
 )
 
-# Reduce FastAPI/Uvicorn log verbosity
+# Reduce FastAPI/Uvicorn and aiomysql log verbosity
 logging.getLogger("uvicorn").setLevel(logging.WARNING)
 logging.getLogger("uvicorn.error").setLevel(logging.WARNING)
 logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 logging.getLogger("fastapi").setLevel(logging.WARNING)
+logging.getLogger("aiomysql").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 

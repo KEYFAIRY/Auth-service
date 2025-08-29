@@ -6,7 +6,7 @@ Base = declarative_base()
 class UserModel(Base):
     """ORM model for the users table"""
     
-    __tablename__ = "Usuario"
+    __tablename__ = "Student"
 
     uid = Column(String(128), primary_key=True)  # Firebase UID
     email = Column(String(255), nullable=False, unique=True)

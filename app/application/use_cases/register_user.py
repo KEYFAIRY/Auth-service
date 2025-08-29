@@ -53,4 +53,4 @@ class RegisterUserUseCase:
             raise
         except Exception as e:
             logger.error(f"Unexpected error during user registration: {create_user_dto.uid} - {str(e)}")
-            raise UserServiceException(f"Unexpected error during registration: {str(e)}")
+            raise UserServiceException(f"Unexpected error during registration: {str(e)}") 

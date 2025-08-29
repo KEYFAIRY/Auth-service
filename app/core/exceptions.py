@@ -1,6 +1,6 @@
 from typing import Optional
 
-class UserServiceException(Exception):
+class UserServiceException(Exception): 
     """Base exception for the authentication service"""
     def __init__(self, message: str, code: str = "500"):
         self.message = message

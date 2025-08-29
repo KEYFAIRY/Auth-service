@@ -23,7 +23,7 @@ class AuthService:
             # Crear usuario en Firebase
             auth_entity = await self.auth_repository.register_user(email, password)
             return auth_entity
-        except UserAlreadyExistsException:
+        except UserAlreadyExistsException: 
             raise
         except Exception as e:
             raise FirebaseAuthException(str(e))

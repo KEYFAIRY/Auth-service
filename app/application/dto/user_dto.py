@@ -20,7 +20,6 @@ class CreateUserDTO(BaseModel):
     def validate_name(cls, v):
         return v.strip()
 
-
 class UserResponseDTO(BaseModel):
     """DTO for user response"""
     uid: str
@@ -34,16 +33,3 @@ class UserResponseDTO(BaseModel):
 
 class UpdateUserDTO(BaseModel):
     """DTO for updating user"""
-    email: Optional[str] = Field(None, min_length=5, description="Email del usuario")
-    name: Optional[str] = Field(None, min_length=2, max_length=100, description="Nombre del usuario")
-    piano_level: Optional[PianoLevel] = Field(None, description="Nivel de piano")
-    
-    @validator('email')
-    def validate_email(cls, v):
-        if v and '@' not in v:
-            raise ValueError('Email must contain @')
-        return v.lower().strip() if v else v
-    
-    @validator('name')
-    def validate_name(cls, v):
-        return v.strip() if v else v

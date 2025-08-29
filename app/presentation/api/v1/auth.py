@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status
+from app.application.dto.auth_dto import AuthDTO
 from app.presentation.schemas.auth_schema import (
     RegisterAuthRequest, 
     LoginRequest, 
@@ -36,18 +37,18 @@ async def register_auth_user(
 ):
     logger.info(f"Registering user credentials for: {auth_request.email}")
     
-    # Execute use case
-    auth_dto = await register_auth_use_case.execute(
+    # UseCase
+    auth_dto_out: AuthDTO = await register_auth_use_case.execute(
         email=auth_request.email,
         password=auth_request.password
     )
-    
-    # Map DTO -> Response Schema
+
+    # DTO -> Schema
     auth_response = AuthResponse(
-        uid=auth_dto.uid,
-        email=auth_dto.email
+        uid=auth_dto_out.uid,
+        email=auth_dto_out.email
     )
-    
+
     logger.info(f"User credentials registered successfully: {auth_response.uid}")
     return StandardResponse.created(
         data=auth_response.dict(),

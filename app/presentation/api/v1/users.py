@@ -38,10 +38,18 @@ async def create_user(
 
     # Execute use case
     user_response_dto = await register_use_case.execute(create_user_dto)
-
+    
+    # DTO → Schema
+    user_response = UserResponse(
+        uid=user_response_dto.uid,
+        email=user_response_dto.email,
+        name=user_response_dto.name,
+        piano_level=user_response_dto.piano_level
+    )
+    
     # Return standardized response
     response = StandardResponse.created(
-        data=user_response_dto.dict(),
+        data=user_response.dict(),
         message="User created successfully"
     )
 
@@ -63,15 +71,22 @@ async def get_user_by_id(
     logger.info(f"Fetching user with UID: {uid}")
 
     user_response_dto = await get_user_use_case.get_by_id(uid)
-
-    response = StandardResponse.success(
-        data=user_response_dto.dict(),
+    
+    # DTO → Schema
+    user_response = UserResponse(
+        uid=user_response_dto.uid,
+        email=user_response_dto.email,
+        name=user_response_dto.name,
+        piano_level=user_response_dto.piano_level
+    )
+    
+    logger.info(f"User fetched successfully: {uid}")
+    
+    return StandardResponse.success(
+        data=user_response.dict(),
         message="User retrieved successfully"
     )
-
-    logger.info(f"User fetched successfully: {uid}")
-    return response
-
+   
 
 @router.get(
     "/",
@@ -87,10 +102,19 @@ async def get_all_users(
 
     users_response_dto = await get_user_use_case.get_all()
 
-    response = StandardResponse.success(
-        data=[user.dict() for user in users_response_dto],
+    # DTOs → Schemas
+    users_response = [
+        UserResponse(
+            uid=user.uid,
+            email=user.email,
+            name=user.name,
+            piano_level=user.piano_level
+        ) for user in users_response_dto
+    ]
+    
+    logger.info(f"Retrieved {len(users_response_dto)} users successfully")
+    
+    return StandardResponse.success(
+        data=[user.dict() for user in users_response],
         message="All users retrieved successfully"
     )
-
-    logger.info(f"Retrieved {len(users_response_dto)} users successfully")
-    return response
