@@ -82,12 +82,57 @@ FIREBASE_API_KEY=your_firebase_api_key
 ### Load Firebase credentials .json in Root directory
 
 ```bash
-📁 AUTH-SERVICE/
+📁 AUTH-SERVICE/                       # Root directory of the authentication microservice
 │
+├── 📁 app/                            # Main application code
+│   ├── main.py                        # FastAPI entry point, sets up routes and middleware
+│   │
+│   ├── 📁 core/                       # Core configurations
+│   │   ├── config.py                  # Environment variables and settings
+│   │   ├── firebase_config.py         # Firebase Authentication configuration
+│   │   ├── exceptions.py              # Custom exception definitions
+│   │   └── logging.py                 # Logging configuration
+│   │
+│   ├── 📁 domain/                     # Business logic layer (Clean Architecture)
+│   │   ├── 📁 entities/               # Core entities (e.g. user.py)
+│   │   ├── 📁 repositories/           # Repository interfaces (e.g. user_repository.py)
+│   │   └── 📁 services/               # Domain services (e.g. auth_service.py)
+│   │
+│   ├── 📁 infrastructure/             # Technical implementations
+│   │   ├── 📁 database/               # Database config and models
+│   │   │   └── 📁 models/             # ORM models (e.g. user_model.py)
+│   │   └── 📁 repositories/           # Concrete repository implementations
+│   │
+│   ├── 📁 application/                # Application layer (use cases and orchestration)
+│   │   ├── 📁 use_cases/              # Use cases (e.g. login_user.py)
+│   │   ├── 📁 dto/                    # Data Transfer Objects (e.g. auth_dto.py)
+│   │   └── 📁 interfaces/             # Application interfaces (e.g. auth_service_interface.py)
+│   │
+│   ├── 📁 presentation/               # Presentation layer (API and external interfaces)
+│   │   ├── 📁 api/                    # REST API endpoints
+│   │   │   ├── 📁 v1/                 # API v1 endpoints
+│   │   │   └── dependencies.py        # Shared dependencies (dependency injection)
+│   │   ├── 📁 schemas/                # Pydantic schemas (e.g. auth_schema.py)
+│   │   └── 📁 middleware/             # Custom middleware (CORS, logging, error handling)
+│   │
+│   └── 📁 shared/                     # Shared utilities (constants, enums, helpers)
 │
-├── .gitignore
-├── requirements.txt
-└── firebase_account.json
+├── 📁 tests/                          # Automated test suite
+│   ├── conftest.py                    # Global pytest config (fixtures, setup)
+│   ├── 📁 unit/                       # Unit tests
+│   │   ├── domain/                    # Domain layer tests (e.g. test_auth_service.py)
+│   │   ├── application/               # Application layer tests (e.g. test_use_cases.py)
+│   │   └── infrastructure/            # Infrastructure tests (e.g. test_repositories.py)
+│
+├── 📁 scripts/                        # Helper scripts (start app, run tests)
+│
+├── .env                               # Environment variables (excluded from Git)
+├── Dockerfile                         # Docker image definition
+├── docker-compose.yml                 # Runs this service container
+├── .gitignore                         # Files/directories ignored by Git
+├── requirements.txt                   # Python dependencies
+└── README.md                          # Project documentation
+
 ```
 
 ### Run the service
