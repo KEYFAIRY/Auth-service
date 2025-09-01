@@ -11,7 +11,6 @@ from app.core.exceptions import (
     ValidationException
 )
 from app.presentation.schemas.common_schema import StandardResponse
-## No longer needed
 import logging
 
 logger = logging.getLogger(__name__)
@@ -84,6 +83,3 @@ async def general_exception_handler(request: Request, exc: Exception):
     logger.error(f"Unhandled exception: {type(exc).__name__}: {str(exc)}", exc_info=True)
     response = StandardResponse.internal_error("An unexpected error occurred")
     return JSONResponse(status_code=500, content=response.dict())
-
-
-## No longer needed

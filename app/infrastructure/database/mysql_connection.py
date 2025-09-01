@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class DatabaseConnection:
-    """Manejo de conexión a MySQL"""
+    """MySQL Connection"""
     
     def __init__(self):
         self.mysql_host = os.getenv("MYSQL_HOST", "localhost")
