@@ -106,7 +106,6 @@ FIREBASE_API_KEY=your_firebase_api_key
 │   ├── 📁 application/                # Application layer (use cases and orchestration)
 │   │   ├── 📁 use_cases/              # Use cases (e.g. login_user.py)
 │   │   ├── 📁 dto/                    # Data Transfer Objects (e.g. auth_dto.py)
-│   │   └── 📁 interfaces/             # Application interfaces (e.g. auth_service_interface.py)
 │   │
 │   ├── 📁 presentation/               # Presentation layer (API and external interfaces)
 │   │   ├── 📁 api/                    # REST API endpoints

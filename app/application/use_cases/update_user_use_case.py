@@ -1,14 +1,14 @@
 import logging
 from app.application.dto.user_dto import UpdateUserDTO, UserResponseDTO
-from app.application.interfaces.user_service_interface import UserServiceInterface
 from app.core.exceptions import DatabaseConnectionException, InvalidUserDataException, UserNotFoundException, UserServiceException
+from app.domain.services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 
 class UpdateUserUseCase:
     """Use case for updating a user"""
 
-    def __init__(self, user_service: UserServiceInterface):
+    def __init__(self, user_service: UserService):
         self.user_service = user_service
 
     async def execute(self, uid: str, update_user_dto: UpdateUserDTO) -> UserResponseDTO:

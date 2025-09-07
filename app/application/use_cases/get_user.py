@@ -1,16 +1,15 @@
-# app/application/use_cases/get_user.py
 from typing import List
-from app.application.interfaces.user_service_interface import UserServiceInterface
 from app.application.dto.user_dto import UserResponseDTO
 from app.core.exceptions import (
     UserNotFoundException,
     DatabaseConnectionException,
     UserServiceException,
-    ValidationException
+    ValidationException,
 )
 import logging
 
 from app.shared.utils import parse_piano_level
+from app.domain.services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +17,7 @@ logger = logging.getLogger(__name__)
 class GetUserUseCase:
     """Use case for retrieving users"""
 
-    def __init__(self, user_service: UserServiceInterface):
+    def __init__(self, user_service: UserService):
         self.user_service = user_service
 
     async def get_by_id(self, uid: str) -> UserResponseDTO:
@@ -35,14 +34,14 @@ class GetUserUseCase:
                 uid=user.uid,
                 email=user.email,
                 name=user.name,
-                piano_level=piano_level_value
+                piano_level=piano_level_value,
             )
 
             logger.info(f"User retrieved successfully: {uid}")
             return user_response
 
         except (UserNotFoundException, DatabaseConnectionException, ValidationException) as e:
-            logger.warning(f"Error fetching user {uid}: {e.message}")
+            logger.warning(f"Error fetching user {uid}: {e}")
             raise
         except Exception as e:
             logger.error(f"Unexpected error fetching user: {uid} - {str(e)}")
@@ -59,7 +58,7 @@ class GetUserUseCase:
                     uid=user.uid,
                     email=user.email,
                     name=user.name,
-                    piano_level=parse_piano_level(user.piano_level)
+                    piano_level=parse_piano_level(user.piano_level),
                 )
                 for user in users
             ]
@@ -68,7 +67,7 @@ class GetUserUseCase:
             return user_responses
 
         except (DatabaseConnectionException, ValidationException) as e:
-            logger.warning(f"Error fetching all users: {e.message}")
+            logger.warning(f"Error fetching all users: {e}")
             raise
         except Exception as e:
             logger.error(f"Unexpected error fetching all users: {str(e)}")

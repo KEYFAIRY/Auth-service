@@ -1,5 +1,4 @@
 import logging
-from app.application.interfaces.user_service_interface import UserServiceInterface
 from app.application.dto.user_dto import CreateUserDTO, UserResponseDTO
 from app.core.exceptions import (
     UserAlreadyExistsException,
@@ -10,6 +9,7 @@ from app.core.exceptions import (
     UserServiceException
 )
 from app.domain.entities.user import User
+from app.domain.services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class RegisterUserUseCase:
     """Use case for registering a user"""
 
-    def __init__(self, user_service: UserServiceInterface):
+    def __init__(self, user_service: UserService):
         self.user_service = user_service
 
     async def execute(self, create_user_dto: CreateUserDTO) -> UserResponseDTO:

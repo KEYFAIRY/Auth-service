@@ -1,14 +1,15 @@
-from app.application.interfaces.auth_service_interface import AuthInterface
 from app.application.dto.auth_dto import AuthDTO
 from app.core.exceptions import FirebaseAuthException, UserServiceException
 import logging
+
+from app.domain.services.auth_service import AuthService
 
 logger = logging.getLogger(__name__)
 
 class RegisterAuthUserUseCase:
     """Use case for registering user credentials in Firebase"""
 
-    def __init__(self, auth_service: AuthInterface):
+    def __init__(self, auth_service: AuthService):
         self.auth_service = auth_service
 
     async def execute(self, email: str, password: str) -> AuthDTO:
