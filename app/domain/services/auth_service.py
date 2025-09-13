@@ -20,7 +20,7 @@ class AuthService:
         self._validate_credentials(email, password)
 
         try:
-            # Crear usuario en Firebase
+            # Create user in Firebase Auth
             auth_entity = await self.auth_repository.register_user(email, password)
             return auth_entity
         except UserAlreadyExistsException: 

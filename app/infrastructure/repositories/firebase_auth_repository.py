@@ -1,5 +1,3 @@
-# app/infrastructure/repositories/firebase_auth_repository.py
-
 import aiohttp
 import firebase_admin.auth as firebase_auth
 from app.domain.repositories.auth_repository import AuthRepository
@@ -15,7 +13,7 @@ from app.core.firebase_config import get_web_api_key
 
 
 class FirebaseAuthRepository(AuthRepository):
-    """Implementación de AuthRepository usando Firebase Auth"""
+    """Auth repository implementation using Firebase Authentication"""
 
     async def register_user(self, email: str, password: str) -> Auth:
         try:

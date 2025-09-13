@@ -1,6 +1,6 @@
 import logging
 from app.application.dto.user_dto import UpdateUserDTO, UserResponseDTO
-from app.core.exceptions import DatabaseConnectionException, InvalidUserDataException, UserNotFoundException, UserServiceException
+from app.core.exceptions import DatabaseConnectionException, InvalidUserDataException, UserAlreadyExistsException, UserNotFoundException, UserServiceException
 from app.domain.services.user_service import UserService
 
 logger = logging.getLogger(__name__)

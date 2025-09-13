@@ -1,5 +1,5 @@
 from app.application.dto.auth_dto import AuthDTO
-from app.core.exceptions import FirebaseAuthException, UserServiceException
+from app.core.exceptions import FirebaseAuthException, UserAlreadyExistsException, UserServiceException
 import logging
 
 from app.domain.services.auth_service import AuthService
@@ -18,6 +18,9 @@ class RegisterAuthUserUseCase:
             auth_dto = await self.auth_service.register_user(email, password)
             logger.info(f"User registered successfully in Firebase: {auth_dto.uid}")
             return auth_dto
+        except UserAlreadyExistsException as e:
+            logger.warning(f"User already exists in Firebase: {e.message}")
+            raise
         except FirebaseAuthException as e:
             logger.warning(f"Firebase error creating user: {e.message}")
             raise

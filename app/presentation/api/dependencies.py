@@ -10,111 +10,111 @@ from app.infrastructure.repositories.mysql_user_repository import MySQLUserRepos
 from app.domain.services.user_service import UserService
 from app.application.use_cases.register_user import RegisterUserUseCase
 
-# Repositorios
+# Repositories
 @lru_cache()
 def get_user_repository() -> MySQLUserRepository:
-    """Obtener instancia del repositorio de usuarios"""
+    """Get user repository instance"""
     return MySQLUserRepository()
 
 @lru_cache()
 def get_auth_repository() -> FirebaseAuthRepository:
-    """Obtener instancia del repositorio de autenticacion"""
+    """Get auth repository instance"""
     return FirebaseAuthRepository()
 
 
-# Servicios
+# Services
 @lru_cache()
 def get_user_domain_service() -> UserService:
-    """Obtener instancia del servicio de dominio de usuario"""
+    """Get user domain service instance"""
     user_repository = get_user_repository()
     return UserService(user_repository)
 
 @lru_cache()
 def get_auth_domain_service() -> AuthService:
-    """Obtener instancia del servicio de dominio de autenticación"""
+    """Get auth domain service instance"""
     auth_repository = get_auth_repository()
     return AuthService(auth_repository)
 
 
-# Casos de uso
+# Use cases
 @lru_cache()
 def get_register_user_use_case() -> RegisterUserUseCase:
-    """Obtener instancia del caso de uso de registro de usuario"""
+    """Get register user use case instance"""
     user_service = get_user_domain_service()
     return RegisterUserUseCase(user_service)
 
 @lru_cache()
 def get_get_user_use_case() -> GetUserUseCase:
-    """Obtener instancia del caso de uso de obtención de usuario"""
+    """Get user use case instance"""
     user_service = get_user_domain_service()
     return GetUserUseCase(user_service)
 
 @lru_cache()
 def get_login_user_use_case() -> LoginUserUseCase:
-    """Obtener instancia del caso de uso de inicio de sesión de usuario"""
+    """Get login user use case instance"""
     auth_service = get_auth_domain_service()
     return LoginUserUseCase(auth_service)
 
 @lru_cache()
 def get_register_auth_user_use_case() -> RegisterAuthUserUseCase:
-    """Obtener instancia del caso de uso de registro de usuario"""
+    """Get register auth user use case instance"""
     auth_service = get_auth_domain_service()
     return RegisterAuthUserUseCase(auth_service)
 
 @lru_cache()
 def get_refresh_token_use_case() -> RefreshTokenUseCase:
-    """Obtener instancia del caso de uso de refresco de token"""
+    """Get refresh token use case instance"""
     auth_service = get_auth_domain_service()
     return RefreshTokenUseCase(auth_service)
 
 @lru_cache()
 def get_update_user_use_case() -> UpdateUserUseCase:
-    """Obtener instancia del caso de uso de actualización de usuario"""
+    """Get update user use case instance"""
     user_service = get_user_domain_service()
     return UpdateUserUseCase(user_service)
 
 
-# Funciones de dependencia para FastAPI
+# Dependency functions for FastAPI
 
-# Repositorios
+# Repositories
 def user_repository_dependency():
-    """Dependencia para inyectar repositorio de usuarios"""
+    """Get user repository instance"""
     return get_user_repository()
 
 def auth_repository_dependency():
-    """Dependencia para inyectar repositorio de autenticación"""
+    """Get auth repository instance"""
     return get_auth_repository()
 
-# Servicios
+# Services
 def user_domain_service_dependency():
-    """Dependencia para inyectar servicio de dominio"""
+    """Get user domain service instance"""
     return get_user_domain_service()
 
 def auth_domain_service_dependency():
-    """Dependencia para inyectar servicio de dominio de autenticación"""
+    """Get auth domain service instance"""
     return get_auth_domain_service()
 
-# Casos de uso
+# Use cases
 def register_user_use_case_dependency():
-    """Dependencia para inyectar caso de uso de registro"""
+    """Get register user use case instance"""
     return get_register_user_use_case()
 
 def get_user_use_case_dependency():
-    """Dependencia para inyectar caso de uso de obtención de usuario"""
+    """Get user use case instance"""
     return get_get_user_use_case()
 
 def login_user_use_case_dependency():
-    """Dependencia para inyectar caso de uso de inicio de sesión de usuario"""
+    """Get login user use case instance"""
     return get_login_user_use_case()
 
 def register_auth_user_use_case_dependency():
-    """Dependencia para inyectar caso de uso de registro de usuario"""
+    """Get register auth user use case instance"""
     return get_register_auth_user_use_case()
 
 def refresh_token_use_case_dependency():
-    """Dependencia para inyectar caso de uso de refresco de token"""
+    """Get refresh token use case instance"""
     return get_refresh_token_use_case()
 
 def update_user_use_case_dependency():
-    """Dependencia para inyectar caso de uso de actualización de usuario"""
+    """Get update user use case instance"""
     return get_update_user_use_case()

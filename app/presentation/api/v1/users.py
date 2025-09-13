@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status
+from fastapi.responses import JSONResponse
 from app.application.use_cases.update_user_use_case import UpdateUserUseCase
 from app.presentation.schemas.user_schema import CreateUserRequest, UpdateUserRequest, UserResponse
 from app.presentation.schemas.common_schema import StandardResponse
@@ -56,7 +57,8 @@ async def create_user(
     )
 
     logger.info(f"User created successfully: {user_request.uid}")
-    return response
+    
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=response.dict())
 
 
 @router.put(
@@ -75,12 +77,9 @@ async def update_user(
 
     # Request → DTO
     update_dto = UpdateUserDTO(
-        email=update_request.email,
-        name=update_request.name,
         piano_level=update_request.piano_level
     )
 
-    # Ejecutamos el caso de uso
     updated_user_dto = await update_use_case.execute(uid, update_dto)
 
     # DTO → Schema
@@ -93,10 +92,12 @@ async def update_user(
 
     logger.info(f"User updated successfully: {uid}")
 
-    return StandardResponse.success(
+    response = StandardResponse.success(
         data=user_response.dict(),
         message="User updated successfully"
     )
+    
+    return JSONResponse(status_code=status.HTTP_200_OK, content=response.dict())
 
 
 @router.get(
@@ -124,10 +125,11 @@ async def get_user_by_id(
     
     logger.info(f"User fetched successfully: {uid}")
     
-    return StandardResponse.success(
+    response = StandardResponse.success(
         data=user_response.dict(),
         message="User retrieved successfully"
     )
+    return JSONResponse(status_code=status.HTTP_200_OK, content=response.dict())
    
 
 @router.get(
@@ -156,7 +158,8 @@ async def get_all_users(
     
     logger.info(f"Retrieved {len(users_response_dto)} users successfully")
     
-    return StandardResponse.success(
+    response = StandardResponse.success(
         data=[user.dict() for user in users_response],
         message="All users retrieved successfully"
     )
+    return JSONResponse(status_code=status.HTTP_200_OK, content=response.dict())

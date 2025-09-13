@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status
+from fastapi.responses import JSONResponse
 from app.application.dto.auth_dto import AuthDTO
 from app.presentation.schemas.auth_schema import (
     RegisterAuthRequest, 
@@ -50,10 +51,13 @@ async def register_auth_user(
     )
 
     logger.info(f"User credentials registered successfully: {auth_response.uid}")
-    return StandardResponse.created(
+    
+    response = StandardResponse.created(
         data=auth_response.dict(),
         message="User credentials registered successfully"
     )
+    
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=response.dict())
 
 
 @router.post(
@@ -84,10 +88,13 @@ async def login_user(
     )
     
     logger.info(f"User logged in successfully: {login_response.uid}")
-    return StandardResponse.success(
+    
+    response = StandardResponse.success(
         data=login_response.dict(),
         message="User logged in successfully"
     )
+    
+    return JSONResponse(status_code=status.HTTP_200_OK, content=response.dict())
 
 
 @router.post(
@@ -115,7 +122,10 @@ async def refresh_token(
     )
     
     logger.info("Token refreshed successfully")
-    return StandardResponse.success(
+    
+    response = StandardResponse.success(
         data=token_response,
         message="Token refreshed successfully"
     )
+    
+    return JSONResponse(status_code=status.HTTP_200_OK, content=response.dict())

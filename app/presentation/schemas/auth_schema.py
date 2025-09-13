@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, EmailStr
 
 
 class RegisterAuthRequest(BaseModel):
-    """Esquema para registrar usuario en Auth"""
+    """Schema for user registration"""
     email: EmailStr = Field(..., description="Email del usuario")
     password: str = Field(..., min_length=6, description="Contraseña del usuario")
 
@@ -16,7 +16,7 @@ class RegisterAuthRequest(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    """Esquema para login"""
+    """Schema for login"""
     email: EmailStr = Field(..., description="Email del usuario")
     password: str = Field(..., min_length=6, description="Contraseña del usuario")
 
@@ -30,7 +30,7 @@ class LoginRequest(BaseModel):
 
 
 class RefreshTokenRequest(BaseModel):
-    """Esquema para refrescar token"""
+    """Schema for refreshing token"""
     refresh_token: str = Field(..., description="Refresh token del usuario")
 
     class Config:

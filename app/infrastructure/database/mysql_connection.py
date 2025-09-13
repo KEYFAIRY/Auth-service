@@ -28,13 +28,15 @@ class DatabaseConnection:
         self.async_session_factory = None
     
     def create_async_engine(self):
-        """Crear motor asíncrono de base de datos"""
+        """Create async database engine and session factory"""
         try:
             self.async_engine = create_async_engine(
                 self.async_database_url,
                 echo=False,
                 pool_pre_ping=True,
-                pool_recycle=3600
+                pool_recycle=3600,
+                pool_size=20,
+                max_overflow=10
             )
             self.async_session_factory = async_sessionmaker(
                 self.async_engine,
@@ -48,18 +50,18 @@ class DatabaseConnection:
     
 
     def get_async_session(self) -> AsyncSession:
-        """Obtener sesión asíncrona"""
+        """Get async session"""
         if not self.async_session_factory:
             self.create_async_engine()
         
         return self.async_session_factory()
     
     async def close_connections(self):
-        """Cerrar conexiones a la base de datos"""
+        """Close database connections"""
         if self.async_engine:
             await self.async_engine.dispose()
             logger.info("Database connections closed")
 
 
-# Instancia global de conexión
+# Global instance
 db_connection = DatabaseConnection()

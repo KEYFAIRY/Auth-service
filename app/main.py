@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import logging
 import sys
 
-# Imports locales
+# Local imports
 from app.core.config import settings
 from app.core.exceptions import (
     UserServiceException,
@@ -16,6 +16,7 @@ from app.core.exceptions import (
     FirebaseAuthException,
     ValidationException
 )
+from app.core.logging import configure_logging
 from app.presentation.api.v1.users import router as users_router
 from app.presentation.api.v1.auth import router as auth_router
 from app.presentation.middleware.exception_handler import (
@@ -42,13 +43,8 @@ logging.basicConfig(
     ]
 )
 
-# Reduce FastAPI/Uvicorn and aiomysql log verbosity
-logging.getLogger("uvicorn").setLevel(logging.WARNING)
-logging.getLogger("uvicorn.error").setLevel(logging.WARNING)
-logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
-logging.getLogger("fastapi").setLevel(logging.WARNING)
-logging.getLogger("aiomysql").setLevel(logging.WARNING)
-
+# Configure logging
+configure_logging()
 logger = logging.getLogger(__name__)
 
 
@@ -60,7 +56,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     
     try:
-        # Inicializar conexión a base de datos
+        # Initialize database connection
         logger.info("Initializing database connection...")
         db_connection.create_async_engine()
         
@@ -91,7 +87,7 @@ def create_application() -> FastAPI:
         lifespan=lifespan
     )
     
-    # Configurar CORS
+    # CORS
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
@@ -99,8 +95,8 @@ def create_application() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
-    # Registrar manejadores de excepciones
+
+    # Register exception handlers
     app.add_exception_handler(UserServiceException, user_service_exception_handler)
     app.add_exception_handler(UserAlreadyExistsException, user_already_exists_exception_handler)
     app.add_exception_handler(InvalidUserDataException, invalid_user_data_exception_handler)
@@ -110,15 +106,15 @@ def create_application() -> FastAPI:
     app.add_exception_handler(ValidationException, validation_exception_handler)
     app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
     app.add_exception_handler(Exception, general_exception_handler)
-    
-    # Registrar rutas
+
+    # Register routes
     app.include_router(users_router, prefix="/api/v1")
     app.include_router(auth_router, prefix="/api/v1")
 
-    # Endpoint de health check
+    # Health check endpoint
     @app.get("/health")
     async def health_check():
-        """Endpoint para verificar el estado de la aplicación"""
+        """Health check endpoint"""
         return {
             "status": "healthy",
             "service": settings.APP_NAME,
@@ -128,7 +124,7 @@ def create_application() -> FastAPI:
     
     @app.get("/")
     async def root():
-        """Endpoint raíz"""
+        """Root endpoint"""
         return {
             "message": f"Welcome to {settings.APP_NAME}",
             "version": settings.APP_VERSION,
@@ -138,7 +134,7 @@ def create_application() -> FastAPI:
     return app
 
 
-# Crear instancia de la aplicación
+# Create the FastAPI application instance
 app = create_application()
 
 

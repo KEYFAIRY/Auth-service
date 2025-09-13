@@ -32,13 +32,11 @@ class UserService:
         user = await self.user_repository.get_user_by_uid(uid)
         if not user:
             raise InvalidUserDataException(f"User with UID {uid} not found")
-
+        
         # Update fields
-        user.name = updated_user.name or user.name
-        user.email = updated_user.email or user.email
         user.piano_level = updated_user.piano_level or user.piano_level
 
-        self._validate_user_data(user.email, user.name, user.piano_level)
+        self._validate_user_data(user.piano_level)
 
         return await self.user_repository.update_user(user)
 
@@ -60,10 +58,6 @@ class UserService:
     async def user_exists(self, uid: str) -> bool:
         return await self.user_repository.user_exists_by_uid(uid)
 
-    def _validate_user_data(self, email: str, name: str, piano_level: PianoLevel):
-        if not email or len(email) < 5 or "@" not in email or "." not in email.split("@")[1]:
-            raise InvalidUserDataException("Invalid email format")
-        if not name or len(name.strip()) < 2 or len(name.strip()) > 100:
-            raise InvalidUserDataException("Invalid name length")
+    def _validate_user_data(self, piano_level: PianoLevel):
         if not isinstance(piano_level, PianoLevel):
             raise InvalidUserDataException("Invalid piano level")
