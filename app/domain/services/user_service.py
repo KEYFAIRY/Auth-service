@@ -17,7 +17,7 @@ class UserService:
         if await self.user_repository.user_exists_by_email(user.email):
             raise UserAlreadyExistsException(f"User with email {user.email} already exists")
 
-        self._validate_user_data(user.email, user.name, user.piano_level)
+        self._validate_user_data(user.piano_level)
 
         user = User(
             uid=user.uid,
