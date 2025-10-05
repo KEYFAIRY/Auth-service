@@ -37,7 +37,7 @@ class CreateUserRequest(BaseModel):
                 "uid": "firebase_uid_123",
                 "email": "usuario@example.com",
                 "name": "Juan Pérez",
-                "piano_level": "beginner"
+                "piano_level": "teclado II"
             }
         }
 

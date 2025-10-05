@@ -1,10 +1,11 @@
 from enum import Enum
 
 class PianoLevel(str, Enum):
-    BEGINNER = "principiante"
-    INTERMEDIATE = "intermedio"
-    ADVANCED = "avanzado"
-    
+    I = "teclado I"
+    II = "teclado II"
+    III = "teclado III"
+    IV = "teclado IV"
+
 class ResponseCode(int, Enum):
     # 2xx Success codes
     SUCCESS = 200
