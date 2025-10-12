@@ -1,7 +1,7 @@
 from app.application.dto.user_dto import UpdateUserDTO
 from app.domain.entities.user import User
 from app.domain.repositories.user_repository import UserRepository
-from app.core.exceptions import UserAlreadyExistsException, InvalidUserDataException
+from app.core.exceptions import UserAlreadyExistsException, InvalidUserDataException, UserNotFoundException
 from app.shared.enums import PianoLevel
 
 class UserService:
@@ -43,7 +43,7 @@ class UserService:
     async def get_user_by_uid(self, uid: str) -> User:
         user = await self.user_repository.get_user_by_uid(uid)
         if not user:
-            raise InvalidUserDataException(f"User with UID {uid} not found")
+            raise UserNotFoundException(f"User with UID {uid} not found")
         return user
 
     async def get_all_users(self) -> list[User]:

@@ -25,9 +25,7 @@ class GetUserUseCase:
             logger.info(f"Fetching user with UID: {uid}")
 
             user = await self.user_service.get_user_by_uid(uid)
-            if not user:
-                raise UserNotFoundException(f"User with UID {uid} not found")
-
+            
             piano_level_value = parse_piano_level(user.piano_level)
 
             user_response = UserResponseDTO(
@@ -40,11 +38,16 @@ class GetUserUseCase:
             logger.info(f"User retrieved successfully: {uid}")
             return user_response
 
-        except (UserNotFoundException, DatabaseConnectionException, ValidationException) as e:
+        except UserNotFoundException as e:
+            logger.warning(f"User not found: {uid} - {str(e)}")
+            raise
+            
+        except (DatabaseConnectionException, ValidationException) as e:
             logger.warning(f"Error fetching user {uid}: {e}")
             raise
+            
         except Exception as e:
-            logger.error(f"Unexpected error fetching user: {uid} - {str(e)}")
+            logger.error(f"Unexpected error fetching user: {uid} - {str(e)}", exc_info=True)
             raise UserServiceException(f"Unexpected error fetching user: {str(e)}")
 
     async def get_all(self) -> List[UserResponseDTO]:
@@ -70,5 +73,5 @@ class GetUserUseCase:
             logger.warning(f"Error fetching all users: {e}")
             raise
         except Exception as e:
-            logger.error(f"Unexpected error fetching all users: {str(e)}")
+            logger.error(f"Unexpected error fetching all users: {str(e)}", exc_info=True)
             raise UserServiceException(f"Unexpected error fetching all users: {str(e)}")

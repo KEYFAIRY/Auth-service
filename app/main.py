@@ -4,6 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from contextlib import asynccontextmanager
 import logging
 import sys
+import asyncio
 
 # Local imports
 from app.core.config import settings
@@ -30,22 +31,34 @@ from app.presentation.middleware.exception_handler import (
     request_validation_exception_handler,
     general_exception_handler
 )
-from app.infrastructure.database.mysql_connection import db_connection
+from app.infrastructure.database import mysql_connection
 
 
-# Configure application logging
-logging.basicConfig(
-    level=getattr(logging, settings.LOG_LEVEL),
-    format=settings.LOG_FORMAT,
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler("app.log") if settings.ENVIRONMENT != "development" else logging.NullHandler()
-    ]
-)
-
-# Configure logging
+# Configure logging 
 configure_logging()
 logger = logging.getLogger(__name__)
+
+
+async def initialize_databases(retry_delay: int = 5):
+    mysql_connected = False
+    attempt = 0
+    
+    while not (mysql_connected):
+        logger.info(f"Reintentando conexión a BDs (intento {attempt + 1})...")
+        await asyncio.sleep(retry_delay)
+        
+        attempt += 1
+        
+        # MySQL
+        if not mysql_connected:
+            try:
+                mysql_connection.mysql_connection.init_engine()
+                await mysql_connection.mysql_connection.verify_connection()
+                mysql_connected = True
+            except Exception as e:
+                logger.warning(f"⚠️  MySQL connection failed: {e}")
+    
+    logger.info("✅ Todas las conexiones de BD establecidas y verificadas")
 
 
 @asynccontextmanager
@@ -55,24 +68,15 @@ async def lifespan(app: FastAPI):
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     
-    try:
-        # Initialize database connection
-        logger.info("Initializing database connection...")
-        db_connection.create_async_engine()
-        
-    except Exception as e:
-        logger.error(f"Error initializing application: {e}")
-        raise
+    # ---------- DB Connections ----------
+    await initialize_databases(retry_delay=5)
     
     yield
     
     # Shutdown
     logger.info("Shutting down application...")
-    try:
-        await db_connection.close_connections()
-        logger.info("Database connections closed")
-    except Exception as e:
-        logger.error(f"Error during shutdown: {e}")
+    # Close DBs
+    await mysql_connection.mysql_connection.close_connections()
 
 
 def create_application() -> FastAPI:

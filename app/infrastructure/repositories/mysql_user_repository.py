@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from app.domain.entities.user import User
 from app.domain.repositories.user_repository import UserRepository
 from app.infrastructure.database.models.user_model import UserModel
-from app.infrastructure.database.mysql_connection import db_connection
+from app.infrastructure.database.mysql_connection import mysql_connection
 from app.core.exceptions import (
     DatabaseConnectionException,
     InvalidUserDataException,
@@ -23,7 +23,7 @@ class MySQLUserRepository(UserRepository):
     """Concrete implementation of the user repository using MySQL"""
 
     async def create_user(self, user: User) -> User:
-        async with db_connection.get_async_session() as session:
+        async with mysql_connection.get_async_session() as session:
             try:
                 user_model = UserModel(
                     uid=user.uid,
@@ -50,7 +50,7 @@ class MySQLUserRepository(UserRepository):
                 raise DatabaseConnectionException(f"Error creating user: {str(e)}")
 
     async def get_user_by_uid(self, uid: str) -> Optional[User]:
-        async with db_connection.get_async_session() as session:
+        async with mysql_connection.get_async_session() as session:
             try:
                 result = await session.execute(select(UserModel).where(UserModel.uid == uid))
                 user_model = result.scalar_one_or_none()
@@ -60,7 +60,7 @@ class MySQLUserRepository(UserRepository):
                 raise DatabaseConnectionException(f"Error getting user by UID: {str(e)}")
 
     async def get_user_by_email(self, email: str) -> Optional[User]:
-        async with db_connection.get_async_session() as session:
+        async with mysql_connection.get_async_session() as session:
             try:
                 result = await session.execute(select(UserModel).where(UserModel.email == email.lower()))
                 user_model = result.scalar_one_or_none()
@@ -70,7 +70,7 @@ class MySQLUserRepository(UserRepository):
                 raise DatabaseConnectionException(f"Error getting user by email: {str(e)}")
 
     async def get_all_users(self) -> List[User]:
-        async with db_connection.get_async_session() as session:
+        async with mysql_connection.get_async_session() as session:
             try:
                 result = await session.execute(select(UserModel))
                 users = result.scalars().all()
@@ -80,7 +80,7 @@ class MySQLUserRepository(UserRepository):
                 raise DatabaseConnectionException(f"Error getting all users: {str(e)}")
 
     async def user_exists_by_uid(self, uid: str) -> bool:
-        async with db_connection.get_async_session() as session:
+        async with mysql_connection.get_async_session() as session:
             try:
                 result = await session.execute(select(UserModel.uid).where(UserModel.uid == uid))
                 return result.scalar_one_or_none() is not None
@@ -89,7 +89,7 @@ class MySQLUserRepository(UserRepository):
                 raise DatabaseConnectionException(f"Error checking user existence by UID: {str(e)}")
 
     async def user_exists_by_email(self, email: str) -> bool:
-        async with db_connection.get_async_session() as session:
+        async with mysql_connection.get_async_session() as session:
             try:
                 result = await session.execute(select(UserModel.email).where(UserModel.email == email.lower()))
                 return result.scalar_one_or_none() is not None
@@ -98,7 +98,7 @@ class MySQLUserRepository(UserRepository):
                 raise DatabaseConnectionException(f"Error checking user existence by email: {str(e)}")
 
     async def update_user(self, user: User) -> User:
-        async with db_connection.get_async_session() as session:
+        async with mysql_connection.get_async_session() as session:
             try:
                 result = await session.execute(select(UserModel).where(UserModel.uid == user.uid))
                 user_model = result.scalar_one_or_none()
@@ -118,7 +118,7 @@ class MySQLUserRepository(UserRepository):
                 raise DatabaseConnectionException(f"Error updating user: {str(e)}")
 
     async def delete_user(self, uid: str) -> bool:
-        async with db_connection.get_async_session() as session:
+        async with mysql_connection.get_async_session() as session:
             try:
                 result = await session.execute(select(UserModel).where(UserModel.uid == uid))
                 user_model = result.scalar_one_or_none()
