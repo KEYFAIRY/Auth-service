@@ -95,3 +95,45 @@ The service is running [Here](http://localhost:8000).
 ```bash
 docker compose down
 ```
+
+## Steps to run unit tests
+
+### Create virtual environment:
+
+```bash
+python -m venv venv
+```
+
+### Activate virtual environment:
+
+```bash
+.\venv\Scripts\Activate.ps1
+```
+
+### Install pip:
+
+```bash
+python -m pip install --upgrade pip
+```
+
+### Install required test tools and project requirements:
+
+```bash
+pip install pytest pytest-asyncio pytest-cov
+```
+
+```bash
+pip install -r requirements.txt
+```
+
+### Check installation:
+
+```bash
+pytest --version
+```
+
+### Execute test:
+
+For example, for executing test in mysql_user_repository.py:
+```bash
+python -m pytest tests/infrastructure/mysql_user_repository.py -v --tb=short```
