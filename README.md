@@ -34,8 +34,7 @@ Python code for authentication service
 │   │
 │   ├── 📁 application/            # Application layer - Use cases and orchestration
 │   │   ├── 📁 use_cases/          # Application-specific use cases - e.g. login_user.py
-│   │   ├── 📁 dto/                # Data Transfer Objects - e.g. auth_dto.py
-│   │   └── 📁 interfaces/         # Application layer interfaces - e.g. auth_service_interface.py
+│   │   └── 📁 dto/                # Data Transfer Objects - e.g. auth_dto.py
 │   │
 │   ├── 📁 presentation/           # Presentation layer - API and external interfaces
 │   │   ├── 📁 api/                # REST API endpoints and configuration
