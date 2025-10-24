@@ -180,7 +180,6 @@ class TestUpdateUser:
         mock_user_repository.update_user.assert_not_awaited()
 
 
-
 class TestGetUserByUid:
     """Suite de pruebas para obtener usuario por UID"""
 
