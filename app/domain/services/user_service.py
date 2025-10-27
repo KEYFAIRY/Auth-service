@@ -49,12 +49,6 @@ class UserService:
     async def get_all_users(self) -> list[User]:
         return await self.user_repository.get_all_users()
 
-    async def delete_user(self, uid: str) -> bool:
-        user = await self.user_repository.get_user_by_uid(uid)
-        if not user:
-            raise InvalidUserDataException(f"User with UID {uid} not found")
-        return await self.user_repository.delete_user(uid)
-
     async def user_exists(self, uid: str) -> bool:
         return await self.user_repository.user_exists_by_uid(uid)
 
