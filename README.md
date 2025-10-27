@@ -136,4 +136,5 @@ pytest --version
 
 For example, for executing test in mysql_user_repository.py:
 ```bash
-python -m pytest tests/infrastructure/mysql_user_repository.py -v --tb=short```
+python -m pytest tests/auth_service.py -v --tb=short
+```
