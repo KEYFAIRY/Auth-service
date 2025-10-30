@@ -22,7 +22,7 @@ Python code for authentication service
 │   │   ├── exceptions.py          # Custom exceptions for authentication domain
 │   │   └── logging.py             # Logging system configuration
 │   │
-│   ├── 📁 domain/                 # Domain layer - Pure business logic (Clean Architecture)
+│   ├── 📁 domain/                 # Domain layer - Pure business logic
 │   │   ├── 📁 entities/           # Domain entities (business objects) - e.g. user.py
 │   │   ├── 📁 repositories/       # Interfaces/contracts for data access - e.g. user_repository.py
 │   │   └── 📁 services/           # Domain services with complex business logic - e.g. auth_service.py
@@ -46,11 +46,6 @@ Python code for authentication service
 │   └── 📁 shared/                 # Shared utilities (constants, enums, utils)
 │
 ├── 📁 tests/                     # Complete automated test suite
-│   ├── conftest.py               # Global pytest configuration (fixtures, setup)
-│   ├── 📁 unit/                  # Unit tests - Test isolated components
-│   │   ├── domain/               # Domain layer tests - e.g. test_auth_service.py
-│   │   ├── application/          # Application layer tests - e.g. test_use_cases.py
-│   │   └── infrastructure/       # Infrastructure layer tests - e.g. test_repositories.py
 │
 ├── 📁 scripts/                   # Automation scripts (start application, runn tests)
 │
